@@ -1,0 +1,8 @@
+framework module "Resizer" {
+	header "ref.h"
+    header "Resizer.objc.h"
+    header "Universe.objc.h"
+    header "Resizer.h"
+
+    export *
+}
