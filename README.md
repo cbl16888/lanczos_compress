@@ -52,3 +52,33 @@ import Resizer  // 确保 Resizer.framework 已正确导入
 ResizerResizeImage(imageData, maxSize, quality, nil) ?? Data()
 
 Android 集成过程
+
+步骤 1: 将 .jar 和 .aar 文件放入 android/libs
+在 flutter项目/android/app/libs/ 目录下（如果没有 libs 文件夹，则创建它），放入 resizer-sources.jar 和 resizer.aar。
+步骤 2: 配置 android/app/build.gradle
+在 android/app/build.gradle 文件中，添加 libs 目录作为 flatDir 依赖，并引入 .aar 和 .jar 文件：
+android {
+...
+dependencies {
+implementation fileTree(dir: 'libs', include: ['*.jar'])
+implementation(name: 'resizer', ext: 'aar')  // resizer.aar
+}
+}
+
+repositories {
+flatDir {
+dirs 'libs'
+}
+}
+步骤 3: 在 android/app/src/main/kotlin/com/example/yourapp/ 目录下，创建一个 ResizerPlugin.kt（或 Java 版本的 ResizerPlugin.java）文件，用于调用 resizer.aar 的方法。
+import resizer.Resizer
+
+// 调用方法压缩
+Resizer.resizeImage(imageBytes, maxSize, quality)
+
+步骤4: 注意事项:
+插件使用的时候会找不到,需要在使用插件的项目的/android/app/jniLibs/目录下也放入放入 resizer-sources.jar 和 resizer.aar。
+然后再repositories下加入
+flatDir {
+dirs("jniLibs") // 这里必须指向 AAR 目录
+}
